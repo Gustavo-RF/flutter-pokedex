@@ -1,3 +1,5 @@
+// Model class created using https://javiercbk.github.io/json_to_dart/
+
 class PokeAPI {
   List<Pokemon> pokemon;
 

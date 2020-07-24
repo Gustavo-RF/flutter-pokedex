@@ -6,6 +6,8 @@ class AppBarHome extends StatelessWidget {
     return Container(
       child: Column(
         children: <Widget>[
+
+          // hamburguer button
           Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -23,6 +25,8 @@ class AppBarHome extends StatelessWidget {
               ],
             ),
           ),
+
+          // page title
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -41,6 +45,7 @@ class AppBarHome extends StatelessWidget {
               )
             ],
           )
+          
         ],
       ),
       height: 120,
