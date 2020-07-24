@@ -19,6 +19,9 @@ abstract class _PokeApiStoreBase with Store {
   @observable
   PokeAPI pokeAPI;
 
+  @observable
+  Pokemon _currentPokemon;
+
   @action
   fetchPokemonList() {
     pokeAPI = null;
@@ -31,6 +34,14 @@ abstract class _PokeApiStoreBase with Store {
   getPokemon({int index}) {
     return pokeAPI.pokemon[index];
   }
+
+  @action
+  setCurrentPokemon({int index}) {
+    _currentPokemon = pokeAPI.pokemon[index];
+  }
+
+  @computed
+  Pokemon get currentPokemon => _currentPokemon;
 
   @action
   Widget getImage({String number}) {

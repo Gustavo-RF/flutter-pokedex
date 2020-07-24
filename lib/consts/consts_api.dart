@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class ConstsApi {
   static String pokeApiUrl = 'https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json';
 
-  static Color getColorType({String type}) {
+  static dynamic getColorType({String type}) {
 
     switch(type) {
       case 'Normal':
