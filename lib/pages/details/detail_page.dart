@@ -7,13 +7,25 @@ import 'package:pokedex/stores/pokeapi_store.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
-class DetailsPage extends StatelessWidget {
-
+class DetailsPage extends StatefulWidget {
   final int index;
   final String name;
-  Color _pokemonColor;
 
   DetailsPage({Key key, this.index, this.name}) : super(key: key);
+
+  @override
+  _DetailsPageState createState() => _DetailsPageState();
+}
+
+class _DetailsPageState extends State<DetailsPage> {
+  Color _pokemonColor;
+  PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: widget.index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,96 +33,94 @@ class DetailsPage extends StatelessWidget {
     final pokemon = _pokeApiStore.currentPokemon;
     _pokemonColor = ConstsApi.getColorType(type: pokemon.type[0]);
 
-        return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(48.0),
-            child: Observer(
-              builder: (context) {
-                _pokemonColor = ConstsApi.getColorType(type: _pokeApiStore.currentPokemon.type[0]);
-                
-                return AppBar(
-                  title: Opacity(
-                    opacity: 0.0,
-                    child: Text(
-                      pokemon.name,
-                      style: TextStyle(
-                        fontFamily: 'Google',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24.0
-                      ),
-                    ),
-                  ),
-                  elevation: 0,
-                  backgroundColor: _pokemonColor,
-                  actions: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.favorite_border),
-                      onPressed: () {},
-                    )
-                  ],
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () { Navigator.pop(context);},
-                  )
-                );
-              }
-            ),
-          ),
-          body: Stack(
-            children: <Widget>[
-              Observer(
-                builder: (BuildContext context) { 
-                  _pokemonColor = ConstsApi.getColorType(type: _pokeApiStore.currentPokemon.type[0]);
-                  return Container(
-                    color: _pokemonColor,
-                  );
-                },             
-              ),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(48.0),
+        child: Observer(builder: (context) {
+          _pokemonColor = ConstsApi.getColorType(
+              type: _pokeApiStore.currentPokemon.type[0]);
 
-              Container(
-                height: MediaQuery.of(context).size.height / 3,
-              ),
-
-              SlidingSheet(
-                elevation: 0.0,
-                cornerRadius: 16.0,
-                snapSpec: const SnapSpec(
-                  snap: true,
-                  snappings: [0.7, 1.0],
-                  positioning: SnapPositioning.relativeToAvailableSpace,
+          return AppBar(
+              title: Opacity(
+                opacity: 0.0,
+                child: Text(
+                  pokemon.name,
+                  style: TextStyle(
+                      fontFamily: 'Google',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24.0),
                 ),
-                builder: (context, state) {
-                  return Container(
-                    height: 500,
-                    
-                  );
+              ),
+              elevation: 0,
+              backgroundColor: _pokemonColor,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.favorite_border),
+                  onPressed: () {},
+                )
+              ],
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
                 },
-              ),
-
-              Padding(
-                padding: EdgeInsets.only(top: 48.0),
-                child: SizedBox(
-                  height: 150.0,
-                  child: PageView.builder(
-                    onPageChanged: (index) {
-                      _pokeApiStore.setCurrentPokemon(index: index);
-                    },
-
-                    itemCount: _pokeApiStore.pokeAPI.pokemon.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Pokemon _pkm = _pokeApiStore.getPokemon(index: index);
-                      return CachedNetworkImage(
-                        height: 80.0,
-                        width: 80.0,
-                        placeholder: (context, uri) => new Container( color: Colors.transparent,),
-                        imageUrl: 'https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/${_pkm.num}.png',
-                      );
-                    }
-                  ),
-                ),
-              )
-            ],
+              ));
+        }),
+      ),
+      body: Stack(
+        children: <Widget>[
+          Observer(
+            builder: (BuildContext context) {
+              _pokemonColor = ConstsApi.getColorType(
+                  type: _pokeApiStore.currentPokemon.type[0]);
+              return Container(
+                color: _pokemonColor,
+              );
+            },
           ),
-        );
+          Container(
+            height: MediaQuery.of(context).size.height / 3,
+          ),
+          SlidingSheet(
+            elevation: 0.0,
+            cornerRadius: 16.0,
+            snapSpec: const SnapSpec(
+              snap: true,
+              snappings: [0.7, 1.0],
+              positioning: SnapPositioning.relativeToAvailableSpace,
+            ),
+            builder: (context, state) {
+              return Container(
+                height: 500,
+              );
+            },
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 48.0),
+            child: SizedBox(
+              height: 150.0,
+              child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    _pokeApiStore.setCurrentPokemon(index: index);
+                  },
+                  itemCount: _pokeApiStore.pokeAPI.pokemon.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Pokemon _pkm = _pokeApiStore.getPokemon(index: index);
+                    return CachedNetworkImage(
+                      height: 80.0,
+                      width: 80.0,
+                      placeholder: (context, uri) => new Container(
+                        color: Colors.transparent,
+                      ),
+                      imageUrl:
+                          'https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/${_pkm.num}.png',
+                    );
+                  }),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
