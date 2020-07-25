@@ -15,12 +15,14 @@ part 'pokeapi_store.g.dart';
 class PokeApiStore = _PokeApiStoreBase with _$PokeApiStore;
 
 abstract class _PokeApiStoreBase with Store {
-  
   @observable
   PokeAPI pokeAPI;
 
   @observable
   Pokemon _currentPokemon;
+
+  @observable
+  Color pokemonColor;
 
   @action
   fetchPokemonList() {
@@ -30,14 +32,14 @@ abstract class _PokeApiStoreBase with Store {
     });
   }
 
-  @action 
-  getPokemon({int index}) {
+  Pokemon getPokemon({int index}) {
     return pokeAPI.pokemon[index];
   }
 
   @action
   setCurrentPokemon({int index}) {
     _currentPokemon = pokeAPI.pokemon[index];
+    pokemonColor = ConstsApi.getColorType(type: _currentPokemon.type[0]);
   }
 
   @computed
@@ -46,8 +48,11 @@ abstract class _PokeApiStoreBase with Store {
   @action
   Widget getImage({String number}) {
     return CachedNetworkImage(
-      placeholder: (context, uri) => new Container( color: Colors.transparent,),
-      imageUrl: 'https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/$number.png',
+      placeholder: (context, uri) => new Container(
+        color: Colors.transparent,
+      ),
+      imageUrl:
+          'https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/$number.png',
     );
   }
 
@@ -61,6 +66,4 @@ abstract class _PokeApiStoreBase with Store {
       return null;
     }
   }
-
-  
 }
