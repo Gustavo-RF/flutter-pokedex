@@ -113,15 +113,6 @@ class _HomePageState extends State<HomePage> {
                               },
                             ),
                           )
-
-                        // ListView.builder(
-                        //   itemCount: _pokeAPI.pokemon.length,
-                        //   itemBuilder: (context, index) {
-                        //     return ListTile(
-                        //       title: Text(_pokeAPI.pokemon[index].name)
-                        //     );
-                        //   }
-                        // )
                         : Center(
                             child: CircularProgressIndicator(),
                           );
